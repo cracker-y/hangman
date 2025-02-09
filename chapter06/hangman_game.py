@@ -63,14 +63,27 @@ hangman_pics = [
      |   /|\\
      |   / \\
      |
-    ---""",
+    ---"""
 ]
-
+game_over = """
+     ------
+     |    |
+     |    
+     |    
+     |    \O/
+     |     /
+    ---  / |
+    GAME OVER
+"""
+print(game_over)
 
 class HangmanGame:
     def __init__(self):
+        # 단어를 고르기 위해 랜덤으로 숫자를 할당한다.
         self.random_number = random.randrange(0, len(words))
+        # 할당된 숫자를 가지고 words에서 값을 가져온다.
         self.word_pick = words[self.random_number]
+        # 선택된 단어 길이에 맞게 '_' 를 출력한다.
         self.emp_string = '_' * len(self.word_pick)
 
     def display(self, display_num, string_line):
@@ -82,14 +95,13 @@ class HangmanGame:
 
 
     def play(self):
-        # self.display(0)
-        # hangman_count = self.display()
-        # print(next(hangman_count))
-        # print(self.emp_string)
         word_pick = self.word_pick
+        # 테스트를 위한 선택된 단어를 보여줍니다.
         print(word_pick)
+        # str 인덱스로 값을 바꿀수 없기때문에 인덱스로 문자를 바꾸기 위한 리스트로 선언
         emp_string = list(self.emp_string)
         self.display(0, self.emp_string)
+        # 단어에 해당 문자가 없을때 카운트가 1개씩 올라간다.
         count_num = 0
 
         while True:
@@ -99,21 +111,26 @@ class HangmanGame:
                 # 단어가 들어 있다면
                 if input_string in word_pick:
                     # 해당 단어가 중복이 있다면
-                    if input_string.count() > 1:
-                        for char in input_string:
-                            pass
+                    if word_pick.count(input_string) > 1:
+                        for i, char in enumerate(word_pick):
+                            if input_string == char:
+                                emp_string[i] = input_string
+                        self.display(count_num, ''.join(emp_string))
+
 
 
                     else:
+                        # 중복 문자가 없을 경우
                         index = word_pick.index(input_string)
                         emp_string[index] = input_string
                         self.display(count_num, ''.join(emp_string))
                 else:
+                    # 문자가 하나도 안들어 있을때
                     count_num += 1
                     self.display(count_num, ''.join(emp_string))
 
-            except StopIteration:
-                print("게임 오버!!")
+            except IndexError:
+                print(game_over)
                 print("게임을 종료 합니다.")
                 break
             finally:
